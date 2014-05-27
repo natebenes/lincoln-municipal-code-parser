@@ -20,7 +20,6 @@ class LMCParser
   def self.parse_ord_number(str)
     hsh = {}
     arr = str.split('.')
-#    puts "[parser][ord_num] #{str.colorize(:cyan)}"
     hsh[:title] = arr[0].strip.gsub(/^0+/,'')
     hsh[:section] = arr[1].strip.gsub(/^0+/,'')
     hsh[:sub_section] = arr[2].strip.gsub(/^0+/,'')
@@ -80,10 +79,8 @@ class LMCParser
       if(text[idx].attr('top') == text[idx - 1].attr('top') && text[idx].children.first.name == text[idx-1].children.first.name)
         # try to catch cases where the section header is split into two elements
         str = text[idx-1].children.first.text + " " + text[idx].children.first.text
-        #puts "[parser:input] " + text[idx-1].text.colorize(:light_magenta) + " " + text[idx].text
       else
         str = text[idx].children.first.text
-        #puts "[parser:input] " + str
       end
 
       # true if the string contains anything that looks like num.num.num
@@ -95,15 +92,10 @@ class LMCParser
       # current line is first ordinance number?
       is_aligned = text[idx].attr('left') == "108" || text[idx-1].attr('left') == "108"
       is_ord = (text[idx].children.first.name == "b" && text[idx + 1].children.first.name == "text")
-      #has_num = ((text[idx].children.first.text =~ /\d/) && (idx == 0 || (text[idx-1].children.first.text =~ /\d/ && text[idx-1].children.first.name == "b")))
-      #puts "[parser][#{idx.to_s}][#{(is_aligned ? 'inline'.to_s.colorize(:green) : 'skewed'.colorize(:red))},#{(is_ord ? 'bold'.to_s.colorize(:green) : 'text'.colorize(:red))},#{(contains_ordinance_number ? 'regex_pass'.colorize(:green) : 'regex_fail'.colorize(:red))},#{(is_not_subsection ? 'notsection'.to_s.colorize(:green) : 'subsection'.colorize(:red))}] \"#{str.colorize(:light_white)}\"" 
 
       if((is_aligned && is_ord && contains_ordinance_number && is_not_subsection) || idx == last)
         if(beginning != 0)
           ord_lines.push([beginning, (idx != last ? (idx - 1) : (text.count - 1))])
-          #puts "[#{beginning.to_s}-#{(idx - 1).to_s}] Line is_ord and #{(text[beginning].children.first.text =~ /\d/) ? "current" : "above"} line has number.".colorize(:magenta)
-          #puts "\t" + text[beginning].children.first.text
-          #puts "\t" + text[idx - 1].children.first.text
         end
         beginning = idx
       end
