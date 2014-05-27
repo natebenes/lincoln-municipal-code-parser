@@ -4,6 +4,19 @@ require 'tmpdir'
 require 'colorize'
 
 class LMCParser
+  def go
+    Dir.glob('data/*.pdf').each {|pdf|
+      base = File.basename(pdf, File.extname(pdf))
+      path = File.expand_path(base)
+      infile = 'data/' + base + '.pdf'
+      outfile = 'data/' + base + '.json'
+      
+      File.open(outfile, 'w+') {|f|
+        f.write(LMCParser.parse(infile))
+      }
+    }
+  end
+  
   def self.parse(pdf_filename)
     text = []
     Dir.mktmpdir {|dir|
@@ -109,3 +122,5 @@ class LMCParser
     return ordinances
   end
 end
+
+LMCParser.new.go
