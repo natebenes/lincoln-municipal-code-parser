@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'tmpdir'
 require 'colorize'
+require 'json'
 
 class LMCParser
   def go
@@ -12,7 +13,7 @@ class LMCParser
       outfile = 'data/' + base + '.json'
       
       File.open(outfile, 'w+') {|f|
-        f.write(LMCParser.parse(infile))
+        f.write(LMCParser.parse(infile).to_json)
       }
     }
   end
